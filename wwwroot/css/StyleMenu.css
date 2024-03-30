@@ -1,0 +1,56 @@
+﻿.containerMenu > .containerTab {
+    width: 300px;
+    height: 100vh;
+    position: fixed;
+    background: #161824;
+    z-index: 10;
+}
+
+.containerMenu > .containerTab > i {
+    font-size: 30px;
+    color: white;
+    display: flex;
+    margin-left: 260px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.containerMenu > .containerTab > a {
+    font-size: 20px;
+    color: black;
+    display: flex;
+    margin: 20px auto;
+    padding: 10px;
+    list-style: none;
+    text-decoration: none;
+    background-color: greenyellow;
+    width: 250px;
+    height: 40px;
+    align-items: center;
+    border-radius: 10px;
+    user-select: none;
+    gap: 10px;
+}
+
+.containerMenu > .containerTab > a:hover {
+   background-color: lawngreen;
+}
+
+.containerMenu > .containerButton > i {
+    font-size: 30px;
+    color: black;
+    display: flex;
+    margin: 10px;
+    position: absolute;
+    background-color: greenyellow;
+    border-radius: 10px;
+    height: 40px;
+    width: 40px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.containerMenu > .containerButton > i:hover {
+   background-color: lawngreen;
+}

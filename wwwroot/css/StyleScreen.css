@@ -1,0 +1,92 @@
+﻿.containerScreen {
+    user-select: none;
+}
+
+.containerImageScreen {
+    display: grid;
+    margin: auto;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px;
+    grid-template-columns: auto auto auto auto auto;
+}
+
+
+.containerImageScreen > div {
+    width: 200px;
+    height: 400px;
+    display: flex;
+}
+
+.containerImageScreen > div > img {
+    width: 200px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: solid silver 1px;
+    user-select: none;
+}
+
+.containerImageScreen > div > i {
+    display: flex; 
+    color: red;
+    position: relative;
+    left: 190px;
+    top: 10px;
+    background: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    align-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.containerPixelScreen {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 400px;
+    margin: auto;
+    gap: 10px;
+}
+
+.containerPixelScreen > label {
+    margin: auto;
+}
+
+.containerFileScreen {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 10px auto;
+    width: 400px;
+}
+
+.containerButtonsScreen {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px auto;
+    width: 400px;
+}
+
+.containerButtonsScreen > .BtnResize {
+    background-color: rebeccapurple;
+    color: white;
+    width: 100px;
+}
+
+.containerButtonsScreen > .BtnSave {
+    background-color: greenyellow;
+    color: white;
+    width: 100px;
+}
+
+.containerButtonsScreen > .BtnReset {
+    background-color: orangered;
+    color: white;
+    width: 100px;
+}
+

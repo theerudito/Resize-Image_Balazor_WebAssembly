@@ -1,0 +1,69 @@
+﻿.containerResize {
+    user-select: none;
+}
+
+.containerImagen {
+    display: flex;
+}
+
+.containerImagen > img {
+    width: 800px;
+    height: 500px;
+    object-fit: cover;
+    margin-top: 10px;
+    margin: 10px auto;
+    align-items: center;
+    justify-content: center;
+    border: solid silver 1px;
+    border-radius: 10px;
+}
+
+.containerInput {
+    display: flex;
+    flex-direction: row;
+    width: 400px;
+    gap: 10px;
+    margin: 10px auto;
+}
+
+.containerInput > label {
+    margin: auto;
+}
+
+.containerFileResize {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: auto;
+    width: 400px;
+}
+
+.containerControl {
+    margin: 10px auto;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.containerControl > .BtnResize {
+    background-color: rebeccapurple;
+    color: white;
+    width: 100px;
+}
+
+.containerControl > .BtnSave {
+    background-color: greenyellow;
+    color: white;
+    width: 100px;
+}
+
+.containerControl > .BtnReset {
+    background-color: orangered;
+    color: white;
+    width: 100px;
+}
+
+
+
+

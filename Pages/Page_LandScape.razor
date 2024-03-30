@@ -1,0 +1,68 @@
+﻿@page "/landscape"
+
+<Div Class="containerLandScape">
+
+    <Div Class="containerImageLandScape">
+        @if (ValueDefault._imagesBase64.Count > 0)
+        {
+            @* <Image Class="imagePrincipal" Source="@(ValueDefault._imagesBase64.Count > 0 ? ValueDefault._imagesBase64[0] : ValueDefault._imageDefault)" /> *@
+            <Div Class="imagePrincipal"  Style="background: white;" />
+
+            <Div Class="containerScreenShotLandScape">
+                <h1 style="background: black; color: white; display: '@(String.IsNullOrEmpty(_title) ? "none" : "block")'">@_title</h1>
+                <h2 style="background: black; color: white; display: '@(String.IsNullOrEmpty(_company)  ? "none" : "block")'">@_company</h2>
+                <Image Class="imgOne" Source="@(ValueDefault._imagesBase64.Count > 1 ? ValueDefault._imagesBase64[1] : ValueDefault._imageDefault)" />
+                <Image Class="imgTwo" Source="@(ValueDefault._imagesBase64.Count > 2 ? ValueDefault._imagesBase64[2] : ValueDefault._imageDefault)" />
+                <Image Class="imgThree" Source="@(ValueDefault._imagesBase64.Count > 3 ? ValueDefault._imagesBase64[3] : ValueDefault._imageDefault)" />
+            </Div Class="imagePrincipal">               
+        }
+        else
+        {        
+            @* <Image Class="imagePrincipal" Source="@(ValueDefault._imageDefault)" /> *@
+            <Div Class="imagePrincipal"  Style="background: white;" />
+
+            <Div Class="containerScreenShotLandScape">
+                <h1 style="background: black; color: white; border-radius: 2px">Name of Application</h1>
+                <h2 style="background: black; color: white; border-radius: 2px">Name of Company</h2>
+                <Image Class="imgOne" Source="@ValueDefault._imageDefault" />
+                <Image Class="imgTwo" Source="@ValueDefault._imageDefault" />
+                <Image Class="imgThree" Source="@ValueDefault._imageDefault" />                
+            </Div>           
+        }      
+    </Div>
+
+    <Div Class="containerInputLandScape">
+
+        <Div Class="containerInputTextLandScape">
+            <TextEdit Placeholder="Title" @bind-Text="_title" />
+            <TextEdit Placeholder="Company" @bind-Text="_company" />
+        </Div>
+
+        <Div Class="containerInputFileLandScape">
+            <FileEdit Changed="@HandleFileSelected" Multiple accept="image/png, image/jpeg" /> 
+            <Check Class="ckeck" TValue="bool">Backgrouund</Check>
+        </Div>
+
+        <Div Class="containerColorLandScape">
+            <ColorPicker @bind-Color="@_colorBackgroud" />
+            <ColorPicker @bind-Color="@_colorTitle" />
+            <ColorPicker @bind-Color="@_colorCompany" />
+        </Div>
+
+        <Div Class="containerInputNumberLandScape">
+            <Label>Width:</Label>
+            <NumericEdit @bind-Value="@ValueDefault._width"/>
+            <Label>Height:</Label>
+            <NumericEdit @bind-Value="@ValueDefault._height"/>
+            
+        </Div>
+
+        <Div Class="containerButtonssLandScape">
+            <Button Class="BtnResize" @onclick="() => ResizeImage(ValueDefault._width, ValueDefault._height)" Disabled="@(ValueDefault._btnResize == false ? false : true)">Build</Button>
+            <Button Class="BtnSave" @onclick="SaveImage" Disabled="@(ValueDefault._btnDownLoad == true ? true : false)">Download</Button>
+            <Button Class="BtnReset">Reset</Button>
+        </Div>
+
+    </Div>
+</Div>
+

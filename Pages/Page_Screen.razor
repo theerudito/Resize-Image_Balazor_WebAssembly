@@ -1,0 +1,43 @@
+﻿@page "/screen"
+
+<Div Class="containerScreen">
+    
+    <Div Class="containerImageScreen">
+        @if (ValueDefault._imagesBase64.Count > 0)
+        { @foreach (var image in ValueDefault._imagesBase64)
+            {
+                <Div>
+                    <i class="bi bi-trash" @onclick="() => DeleteImage(image)"></i>
+                    <Image Source="@image" />
+                </Div>             
+            }
+        }
+        else
+        {
+            <Div>
+                <Image Source="@ValueDefault._imageDefault" />
+            </Div>           
+        }
+        
+    </Div>
+
+    <Div Class="containerPixelScreen">
+        <Label>Width</Label>
+        <NumericEdit @bind-Value="@ValueDefault._width" />
+
+        <Label>Height</Label>
+        <NumericEdit @bind-Value="@ValueDefault._height" />
+    </Div>
+
+    <Div Class="containerFileScreen">
+        <FileEdit Changed="@HandleFileSelected" Multiple accept="image/png, image/jpeg" />
+    </Div>
+
+    <Div Class="containerButtonsScreen">
+        <Button Class="BtnResize" @onclick="() => ResizeImage(ValueDefault._width, ValueDefault._height)" Disabled="@(ValueDefault._btnResize == false ? false : true)">Resize</Button>
+        <Button Class="BtnSave" @onclick="SaveImage" Disabled="@(ValueDefault._btnDownLoad == true ? true : false)">Download</Button>
+        <Button Class="BtnReset">Reset</Button>
+    </Div>
+
+</Div>
+

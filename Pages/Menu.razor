@@ -1,0 +1,38 @@
+﻿<Div Class="containerMenu">
+
+    <div class="containerButton @_containerButton" @onclick='() => ShowMenu("d-block")'>
+        <i class="bi-list"></i>
+    </div>
+
+    <div class="containerTab @_containerTab">
+        <i class="bi bi-x-lg bi" @onclick='() => ShowMenu("d-none")'></i>
+        <Link To="/"><i class="bi bi-aspect-ratio" @onclick='() => ShowMenu("d-none")'></i> Resize Image</Link>
+        <Link To="/screen"><i class="bi bi-images" @onclick='() => ShowMenu("d-none")'></i> Resize Screenshot</Link>
+        <Link To="/landscape"><i class="bi bi-image" @onclick='() => ShowMenu("d-none")'></i> Build Wallpaper</Link>
+    </div>
+</Div>
+
+@code {
+    private string _containerTab = null!;
+    private string _containerButton = null!;
+
+    override protected void OnInitialized()
+    {
+        _containerButton = "d-block";
+        _containerTab = "d-none";
+    }
+
+    public void ShowMenu(string value)
+    {
+        if (value == "d-block")
+        {
+            _containerButton = "d-none";
+            _containerTab = "d-block";
+        }
+        else
+        {
+            _containerButton = "d-block";
+            _containerTab = "d-none";
+        }
+    }
+}
