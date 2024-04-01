@@ -13,6 +13,7 @@
     margin-left: 260px;
     margin-top: 10px;
     cursor: pointer;
+    z-index: 10;
 }
 
 .containerMenu > .containerTab > a {
@@ -29,7 +30,7 @@
     align-items: center;
     border-radius: 10px;
     user-select: none;
-    gap: 10px;
+    z-index: 10;
 }
 
 .containerMenu > .containerTab > a:hover {
@@ -49,6 +50,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    z-index: 1;
 }
 
 .containerMenu > .containerButton > i:hover {

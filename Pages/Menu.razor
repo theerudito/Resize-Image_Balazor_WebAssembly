@@ -6,9 +6,9 @@
 
     <div class="containerTab @_containerTab">
         <i class="bi bi-x-lg bi" @onclick='() => ShowMenu("d-none")'></i>
-        <Link To="/"><i class="bi bi-aspect-ratio" @onclick='() => ShowMenu("d-none")'></i> Resize Image</Link>
-        <Link To="/screen"><i class="bi bi-images" @onclick='() => ShowMenu("d-none")'></i> Resize Screenshot</Link>
-        <Link To="/landscape"><i class="bi bi-image" @onclick='() => ShowMenu("d-none")'></i> Build Wallpaper</Link>
+        <Link To="/" @onclick='() => ShowMenu("d-none")'><i class="bi bi-aspect-ratio"></i>&nbsp  Resize Image</Link>
+        <Link To="/screen" @onclick='() => ShowMenu("d-none")'><i class="bi bi-images"></i>&nbsp  Resize Screenshot</Link>
+        <Link To="/landscape" @onclick='() => ShowMenu("d-none")'><i class="bi bi-image"></i>&nbsp  Build Wallpaper</Link>
     </div>
 </Div>
 

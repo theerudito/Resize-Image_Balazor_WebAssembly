@@ -24,7 +24,7 @@ namespace Resize_Image.Pages
 
         protected override void OnInitialized()
         {
-            ValueDefault.ResetValues();
+            ValueDefault.ResetValues();       
         }
         
         public async Task HandleFileSelected(FileChangedEventArgs e)
@@ -64,12 +64,11 @@ namespace Resize_Image.Pages
         
         public async void ResizeImage(int width, int height)
         {
-
             if (ValueDefault._fromAPI == "api")
             {
                 var data = new DataUser
                 {
-                    ImgBase64 = ValueDefault._imgBase64,
+                    imgBase64 = ValueDefault._imgBase64,
                     option = 2,
                     width = width == 0 ? 500 : width,
                     height = height == 0 ? 500 : height
@@ -92,13 +91,12 @@ namespace Resize_Image.Pages
                         fileStream.CopyTo(ms);
                         ValueDefault._file = ms.ToArray();
                         ValueDefault._btnResize = true;
-                        ValueDefault._btnDownLoad = false;
-
-                        await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
                     }
-              
-                }
 
+                    await JS.InvokeVoidAsync("alert", "The images were resized correctly.");
+                    ValueDefault._taskComplete = true;
+                    await InvokeAsync(StateHasChanged);
+                }
             }
             else
             {
@@ -118,30 +116,32 @@ namespace Resize_Image.Pages
                     {
                         image.Mutate(x => x.Resize(width == 0 ? 200 : width, height == 0 ? 200 : height));
                         image.Save(outputPath);
-                        ValueDefault._btnResize = true;
-                        ValueDefault._btnDownLoad = false;
                     }
                 }
 
                 await JS.InvokeVoidAsync("alert", "The images were resized correctly.");
-            }
-
-          
+                ValueDefault._taskComplete = true;
+                await InvokeAsync(StateHasChanged);
+            }         
         }
         
         public async  void SaveImage()
         {
             if (ValueDefault._fromAPI == "api")
-            {               
-                await JS.InvokeVoidAsync("downloadFileZip", ValueDefault._fileNameOne + ".zip", ValueDefault._file);
+            {
+                ValueDefault._taskComplete = false;
+                ValueDefault._btnResize = true;
+                await InvokeAsync(StateHasChanged);
 
-                ValueDefault._btnDownLoad = true;
+                await JS.InvokeVoidAsync("downloadFileZip", ValueDefault._fileNameOne + ".zip", ValueDefault._file);
 
                 ValueDefault.ResetValues();
             }
             else
             {
-                ValueDefault._btnDownLoad = true;
+                ValueDefault._taskComplete = false;
+                ValueDefault._btnResize = true;
+                await InvokeAsync(StateHasChanged);
 
                 DirectoryManager.CreateDirectory(Path.Combine(ValueDefault._path, ValueDefault._folderZip));
 

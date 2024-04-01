@@ -2,6 +2,18 @@
 {
     public class ValueDefault
     {
+        public static string _title = "Name of Application";
+
+        public static string _company = "";
+
+        public static string _colorBackgroud = "#000000";
+
+        public static string _colorTitle = "#000000";
+
+        public static string _colorCompany = "#000000";
+
+        public static bool _withBackground = false;
+
         public static string _imageDefault = "./assets/logo.jpg";
 
         public static string _path = Directory.GetCurrentDirectory();
@@ -24,7 +36,7 @@
 
         public static bool _btnResize = false;
 
-        public static bool _btnDownLoad = false;
+        public static bool _taskComplete = false;
 
         public static string _base64 = null!;
 
@@ -43,11 +55,17 @@
             _base64 = null!;
             _file = null!;
             _btnResize = true;
-            _btnDownLoad = true;
+            _taskComplete = false;
             _srcImg = new List<string>();
             _imagesBytes = new List<byte[]>();
             _imgBase64  = new List<string>();
             _imageCount = 0;
+            _colorBackgroud = "#000000";
+            _colorTitle = "#000000";
+            _colorCompany = "#000000";
+            _withBackground = false;
+            _title = "";
+            _company = "";
         }
     }
 }

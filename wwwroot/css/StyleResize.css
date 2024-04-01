@@ -47,21 +47,36 @@
 }
 
 .containerControl > .BtnResize {
-    background-color: rebeccapurple;
-    color: white;
+    background-color: #663399;
+    color: black;
     width: 100px;
 }
 
 .containerControl > .BtnSave {
-    background-color: greenyellow;
-    color: white;
+    background-color: #ADFF2F;
+    color: black;
     width: 100px;
 }
 
 .containerControl > .BtnReset {
-    background-color: orangered;
-    color: white;
+    background-color: #FF4500;
+    color: black;
     width: 100px;
+}
+
+.containerControl > .BtnResize:hover {
+    color: black;
+    background-color: #4C2F8E;
+}
+
+.containerControl > .BtnSave:hover {
+    color: black;
+    background-color: #8B8B00;
+}
+
+.containerControl > .BtnReset:hover {
+    color: black;
+    background-color: #FF7F00;
 }
 
 

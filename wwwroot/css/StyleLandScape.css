@@ -64,10 +64,11 @@
     position: absolute;
     top: 0px;
     left: 5px;
-    font-size: 20px; 
+    font-size: 20px;
     width: 350px;
     padding: 5px;
-    border-radius: 5px
+    border-radius: 2px;
+    color: white;
 }
 
 .containerScreenShotLandScape > h2 {
@@ -77,7 +78,8 @@
     font-size: 20px;
     width: 350px;
     padding: 5px;
-    border-radius: 5px
+    border-radius: 2px;
+    color: white;
 }
 
 
@@ -147,22 +149,39 @@
 }
 
 .containerButtonssLandScape > .BtnResize {
-   background-color: rebeccapurple;
-   color: white;
-   width: 100px;
+    background-color: #663399;
+    color: black;
+    width: 100px;
 }
 
 .containerButtonssLandScape > .BtnSave {
-   background-color: greenyellow;
-   color: white;
-   width: 100px;
+    background-color: #ADFF2F;
+    color: black;
+    width: 100px;
 }
 
 .containerButtonssLandScape > .BtnReset {
-   background-color: orangered;
-   color: white;
-   width: 100px;
+    background-color: #FF4500;
+    color: black;
+    width: 100px;
 }
+
+.containerButtonssLandScape > .BtnResize:hover { 
+    color: black;
+    background-color: #4C2F8E;
+}
+
+.containerButtonssLandScape > .BtnSave:hover {
+    color: black;
+    background-color: #8B8B00
+}
+
+.containerButtonssLandScape > .BtnReset:hover {
+    color: black;
+    background-color: #FF7F00;
+}
+
+
 
 
 

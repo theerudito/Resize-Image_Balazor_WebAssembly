@@ -5,20 +5,20 @@ using Resize_Image.Helpers;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using Newtonsoft.Json;
+using Resize_Image.Models;
+using System.Text;
 
 
 namespace Resize_Image.Pages
 {
     public partial class Page_LandScape
     {      
-        private string _title = "";
-        private string _company = "";
-        private string _colorBackgroud = "yellow";
-        private string _colorTitle = "blue";
-        private string _colorCompany = "red";
-
         [Inject]
         public IJSRuntime JS { get; set; } = null!;
+
+        [Inject]
+        public HttpClient fetch { get; set; } = null!;
 
         protected override void OnInitialized()
         {
@@ -41,10 +41,9 @@ namespace Resize_Image.Pages
 
                         var bytes = fileMemoryStream.ToArray();
 
-                        ValueDefault._imagesBytes.Add(bytes);
-
                         ValueDefault._srcImg.Add($"data:{file.UploadUrl};base64,{Convert.ToBase64String(bytes)}");
-
+                        ValueDefault._imagesBytes.Add(bytes);
+                        ValueDefault._imgBase64.Add(Convert.ToBase64String(bytes));
                         ValueDefault._imageCount++;
                     }
                 }
@@ -63,86 +62,131 @@ namespace Resize_Image.Pages
             }
         }
 
-
         public async void ResizeImage(int width, int height)
         {
-            ValueDefault._btnResize = true;
-            List<Image<Rgba32>> images = new List<Image<Rgba32>>();
-
-            Console.WriteLine(images.Count + " inicia");
-
-            using (var firstImage = SixLabors.ImageSharp.Image.Load<Rgba32>(ValueDefault._imagesBytes[0]))
+            if (ValueDefault._fromAPI == "api")
             {
-                firstImage.Mutate(x => x.Resize(1024, 500));
-                //var font = SystemFonts.CreateFont("Segoe UI", 39, FontStyle.Regular);
-                //firstImage.Mutate(x => x.DrawText("Hello World", font, SixLabors.ImageSharp.Color.Black, new PointF(10, 10)));
-                images.Add(firstImage.Clone());
-
-
-                using (var image = SixLabors.ImageSharp.Image.Load<Rgba32>(ValueDefault._imagesBytes[1]))
+                var data = new DataUser
                 {
-                    image.Mutate(x => x.Resize(180, 350));
-                    AddBorder(image, 1, SixLabors.ImageSharp.Color.Black);
-                    images.Add(image.Clone());
-                }
+                    imgBase64 = ValueDefault._imgBase64,
+                    option = 3,
+                    width = width == 0 ? 1024 : width,
+                    height = height == 0 ? 500 : height,
+                    background = ValueDefault._colorBackgroud,
+                    title = ValueDefault._title,
+                    titleColor = ValueDefault._colorTitle,
+                    company = ValueDefault._company,
+                    companyColor = ValueDefault._colorCompany,
+                    withBackground = ValueDefault._withBackground
+                };
 
-                using (var image = SixLabors.ImageSharp.Image.Load<Rgba32>(ValueDefault._imagesBytes[2]))
-                {
-                    image.Mutate(x => x.Resize(180, 350));
-                    AddBorder(image, 1, SixLabors.ImageSharp.Color.Black);
-                    images.Add(image.Clone());
-                }
+                var json = JsonConvert.SerializeObject(data);
 
-                using (var image = SixLabors.ImageSharp.Image.Load<Rgba32>(ValueDefault._imagesBytes[3]))
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await fetch.PostAsync("Resize_Images", content);
+
+
+                if (response.IsSuccessStatusCode)
                 {
-                    image.Mutate(x => x.Resize(200, 400));
-                    AddBorder(image, 1, SixLabors.ImageSharp.Color.Black);
-                    images.Add(image.Clone());
+
+                    var fileStream = response.Content.ReadAsStream();
+
+                    using (var ms = new MemoryStream())
+                    {
+                        fileStream.CopyTo(ms);
+                        ValueDefault._file = ms.ToArray();
+                    }
+
+                    await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
+                    ValueDefault._taskComplete = true;
+                    await InvokeAsync(StateHasChanged);
                 }
             }
-
-            Console.WriteLine(images.Count + " termina");
-
-            using (var outputImage = new Image<Rgba32>(1024, 500))
+            else
             {
-                var mainImage = images[0];
-                outputImage.Mutate(x => x.DrawImage(mainImage, new Point(0, 0), 1));
 
-                var secondImage = images[1];
-                outputImage.Mutate(x => x.DrawImage(secondImage, new Point(20, 70), 1));
+                List<Image<Rgba32>> images = new List<Image<Rgba32>>();
 
-                var thirdImage = images[2];
-                outputImage.Mutate(x => x.DrawImage(thirdImage, new Point(800, 50), 1));
+                using (var firstImage = SixLabors.ImageSharp.Image.Load<Rgba32>(ValueDefault._imagesBytes[0]))
+                {
+                    firstImage.Mutate(x => x.Resize(1024, 500));
+                    images.Add(firstImage.Clone());
 
-                var fourImage = images[2];
-                outputImage.Mutate(x => x.DrawImage(fourImage, new Point(800, 50), 1));
 
-                string outputPath = Path.Combine(ValueDefault._path, ValueDefault._folderImages, "avatar.png");
+                    using (var image = SixLabors.ImageSharp.Image.Load<Rgba32>(ValueDefault._imagesBytes[1]))
+                    {
+                        image.Mutate(x => x.Resize(180, 350));
+                        AddBorder(image, 1, SixLabors.ImageSharp.Color.Black);
+                        images.Add(image.Clone());
+                    }
 
-                DirectoryManager.CreateDirectory(Path.Combine(ValueDefault._path, ValueDefault._folderImages));
+                    using (var image = SixLabors.ImageSharp.Image.Load<Rgba32>(ValueDefault._imagesBytes[2]))
+                    {
+                        image.Mutate(x => x.Resize(180, 350));
+                        AddBorder(image, 1, SixLabors.ImageSharp.Color.Black);
+                        images.Add(image.Clone());
+                    }
 
-                outputImage.Save(outputPath);
+                    using (var image = SixLabors.ImageSharp.Image.Load<Rgba32>(ValueDefault._imagesBytes[3]))
+                    {
+                        image.Mutate(x => x.Resize(200, 400));
+                        AddBorder(image, 1, SixLabors.ImageSharp.Color.Black);
+                        images.Add(image.Clone());
+                    }
+                }
 
-                ValueDefault._file = File.ReadAllBytes(outputPath);
+                using (var outputImage = new Image<Rgba32>(1024, 500))
+                {
+                    var mainImage = images[0];
+                    outputImage.Mutate(x => x.DrawImage(mainImage, new Point(0, 0), 1));
 
-                Console.WriteLine("The image were resized correctly.");
+                    var secondImage = images[1];
+                    outputImage.Mutate(x => x.DrawImage(secondImage, new Point(20, 70), 1));
 
-              
-                ValueDefault._btnDownLoad = false;
-            }
+                    var thirdImage = images[2];
+                    outputImage.Mutate(x => x.DrawImage(thirdImage, new Point(800, 50), 1));
 
-            await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
+                    var fourImage = images[2];
+                    outputImage.Mutate(x => x.DrawImage(fourImage, new Point(800, 50), 1));
+
+                    string outputPath = Path.Combine(ValueDefault._path, ValueDefault._folderImages, $"{ValueDefault._fileNameOne}.png");
+
+                    DirectoryManager.CreateDirectory(Path.Combine(ValueDefault._path, ValueDefault._folderImages));
+
+                    outputImage.Save(outputPath);
+
+                    ValueDefault._file = File.ReadAllBytes(outputPath);                  
+                }
+
+                await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
+                ValueDefault._taskComplete = true;
+                await InvokeAsync(StateHasChanged);
+            }         
         }
-
 
         public async void SaveImage()
         {
-            ValueDefault._btnDownLoad = true;
+            if (ValueDefault._fromAPI == "api")
+            {
+                ValueDefault._taskComplete = false;
+                ValueDefault._btnResize = true;
+                await InvokeAsync(StateHasChanged);
 
-            string outputPath = Path.Combine(ValueDefault._path, ValueDefault._folderImages, "avatar.png");
+                await JS.InvokeVoidAsync("downloadFileFromByte", $"{ValueDefault._fileNameOne}.png", ValueDefault._file);
+                ValueDefault.ResetValues();
 
-            await JS.InvokeVoidAsync("downloadFileFromByte", outputPath, ValueDefault._file);
-            ValueDefault.ResetValues();
+            } else
+            {
+                ValueDefault._taskComplete = false;
+                ValueDefault._btnResize = true;
+                await InvokeAsync(StateHasChanged);
+
+                string outputPath = Path.Combine(ValueDefault._path, ValueDefault._folderImages, $"{ValueDefault._fileNameOne}.png");
+
+                await JS.InvokeVoidAsync("downloadFileFromByte", outputPath, ValueDefault._file);
+                ValueDefault.ResetValues();
+            }
         }
 
         private void AddBorder(Image<Rgba32> image, int borderSize, SixLabors.ImageSharp.Color borderColor)

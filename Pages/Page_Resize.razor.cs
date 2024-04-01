@@ -49,13 +49,13 @@ namespace Resize_Image.Pages
             ValueDefault._btnResize = false;
         }
         
-        public async void ResizeImage(int width, int height)
+        public async Task<bool> ResizeImage(int width, int height)
         {
             if (ValueDefault._fromAPI == "api")
             {
                 var data = new DataUser
                 {
-                    ImgBase64 = ValueDefault._imgBase64,
+                    imgBase64 = ValueDefault._imgBase64,
                     option = 1,
                     width = width == 0 ? 500 : width,
                     height = height == 0 ? 500 : height
@@ -77,12 +77,13 @@ namespace Resize_Image.Pages
                     {
                         fileStream.CopyTo(ms);
                         ValueDefault._file = ms.ToArray();
-                        ValueDefault._btnDownLoad = false;
                     }                  
-
-                    await JS.InvokeVoidAsync("alert", "The image were resized correctly.");                  
-                    ValueDefault._btnResize = true;
                 }
+
+                await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
+                ValueDefault._taskComplete = true;
+                await InvokeAsync(StateHasChanged);
+                return true;
 
             } else 
             {
@@ -94,18 +95,21 @@ namespace Resize_Image.Pages
                     {
                         image.SaveAsPng(ms);
                         ValueDefault._file = ms.ToArray();
-                        ValueDefault._btnDownLoad = false;
                     }
                 }
 
-                await JS.InvokeVoidAsync("alert", "The image were resized correctly.");  
-                ValueDefault._btnResize = true;
+                await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
+                ValueDefault._taskComplete = true;
+                await InvokeAsync(StateHasChanged);
+                return true;
             }
         }
         
         public async void SaveImage()
         {
-            ValueDefault._btnDownLoad = true;
+            ValueDefault._taskComplete = false;
+            ValueDefault._btnResize = true;
+            await InvokeAsync(StateHasChanged);
             await JS.InvokeVoidAsync("downloadFileFromByte", ValueDefault._fileNameOne + ".png", ValueDefault._file);
             ValueDefault.ResetValues();
         }   

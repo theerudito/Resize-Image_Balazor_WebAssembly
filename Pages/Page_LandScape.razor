@@ -5,25 +5,29 @@
     <Div Class="containerImageLandScape">
         @if (ValueDefault._srcImg.Count > 0)
         {
-            @* <Image Class="imagePrincipal" Source="@(ValueDefault._imagesBase64.Count > 0 ? ValueDefault._imagesBase64[0] : ValueDefault._imageDefault)" /> *@
-            <Div Class="imagePrincipal"  Style="background: white;" />
-
+            if (ValueDefault._withBackground == false)
+            {
+                <Image Class="imagePrincipal" Source="@(ValueDefault._srcImg.Count > 0 ? ValueDefault._srcImg[0] : ValueDefault._imageDefault)" />
+            }
+            else
+            {
+                <div Class="imagePrincipal" style="background-color: @ValueDefault._colorBackgroud"></div>
+            }
+           
             <Div Class="containerScreenShotLandScape">
-                <h1 style="background: black; color: white; display: '@(String.IsNullOrEmpty(_title) ? "none" : "block")'">@_title</h1>
-                <h2 style="background: black; color: white; display: '@(String.IsNullOrEmpty(_company)  ? "none" : "block")'">@_company</h2>
+                <h1 style="background: red">@ValueDefault._title</h1>
+                <h2 style="background-color: @ValueDefault._colorCompany)' ">@ValueDefault._company</h2>
                 <Image Class="imgOne" Source="@(ValueDefault._srcImg.Count > 1 ? ValueDefault._srcImg[1] : ValueDefault._imageDefault)" />
                 <Image Class="imgTwo" Source="@(ValueDefault._srcImg.Count > 2 ? ValueDefault._srcImg[2] : ValueDefault._imageDefault)" />
                 <Image Class="imgThree" Source="@(ValueDefault._srcImg.Count > 3 ? ValueDefault._srcImg[3] : ValueDefault._imageDefault)" />
-            </Div Class="imagePrincipal">               
+            </Div>               
         }
         else
         {        
-            @* <Image Class="imagePrincipal" Source="@(ValueDefault._imageDefault)" /> *@
-            <Div Class="imagePrincipal"  Style="background: white;" />
-
+            <div Class="imagePrincipal" style="background-color: @ValueDefault._colorBackgroud = white"></div>
             <Div Class="containerScreenShotLandScape">
-                <h1 style="background: black; color: white; border-radius: 2px">Name of Application</h1>
-                <h2 style="background: black; color: white; border-radius: 2px">Name of Company</h2>
+                <h1 style="background-color: @ValueDefault._colorTitle">Name of Application</h1>
+                <h2 style="background-color: @ValueDefault._colorCompany">Name of Company</h2>
                 <Image Class="imgOne" Source="@ValueDefault._imageDefault" />
                 <Image Class="imgTwo" Source="@ValueDefault._imageDefault" />
                 <Image Class="imgThree" Source="@ValueDefault._imageDefault" />                
@@ -34,32 +38,37 @@
     <Div Class="containerInputLandScape">
 
         <Div Class="containerInputTextLandScape">
-            <TextEdit Placeholder="Title" @bind-Text="_title" />
-            <TextEdit Placeholder="Company" @bind-Text="_company" />
+            <TextEdit Placeholder="Title" @bind-Text="ValueDefault._title" />
+            <TextEdit Placeholder="Company" @bind-Text="ValueDefault._company" />
         </Div>
 
         <Div Class="containerInputFileLandScape">
             <FileEdit Changed="@HandleFileSelected" Multiple accept="image/png, image/jpeg" /> 
-            <Check Class="ckeck" TValue="bool">Backgrouund</Check>
+            <Check Class="ckeck" TValue="bool" @bind-Checked="ValueDefault._withBackground">Backgrouund</Check>
         </Div>
 
         <Div Class="containerColorLandScape">
-            <ColorPicker @bind-Color="@_colorBackgroud" />
-            <ColorPicker @bind-Color="@_colorTitle" />
-            <ColorPicker @bind-Color="@_colorCompany" />
+            <ColorPicker @bind-Color="@ValueDefault._colorBackgroud" />
+            <ColorPicker @bind-Color="@ValueDefault._colorTitle" />
+            <ColorPicker @bind-Color="@ValueDefault._colorCompany" />
         </Div>
 
         <Div Class="containerInputNumberLandScape">
             <Label>Width:</Label>
             <NumericEdit @bind-Value="@ValueDefault._width"/>
             <Label>Height:</Label>
-            <NumericEdit @bind-Value="@ValueDefault._height"/>
-            
+            <NumericEdit @bind-Value="@ValueDefault._height"/>     
         </Div>
 
         <Div Class="containerButtonssLandScape">
-            <Button Class="BtnResize" @onclick="() => ResizeImage(ValueDefault._width, ValueDefault._height)" Disabled="@(ValueDefault._btnResize == false ? false : true)">Build</Button>
-            <Button Class="BtnSave" @onclick="SaveImage" Disabled="@(ValueDefault._btnDownLoad == true ? true : false)">Download</Button>
+            @if (ValueDefault._taskComplete == false)
+            {
+                <Button Class="BtnResize" @onclick="() => ResizeImage(ValueDefault._width, ValueDefault._height)" Disabled="@(ValueDefault._btnResize == false ? false : true)">Build</Button>
+            }
+            else
+            {
+                <Button Class="BtnSave" @onclick="SaveImage">Download</Button>
+            }
             <Button Class="BtnReset" @onclick="ValueDefault.ResetValues">Reset</Button>
         </Div>
 
