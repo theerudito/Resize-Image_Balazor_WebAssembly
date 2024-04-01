@@ -93,8 +93,10 @@ namespace Resize_Image.Pages
                         ValueDefault._file = ms.ToArray();
                         ValueDefault._btnResize = true;
                         ValueDefault._btnDownLoad = false;
+
+                        await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
                     }
-                    await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
+              
                 }
 
             }
