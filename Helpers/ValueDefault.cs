@@ -10,9 +10,9 @@
 
         public static string _folderZip = "zip";
 
-        public static string _fileNameOne = DateTime.Now.ToString("yyyyMMddHHmmss");
+        public static string _fromAPI = "api";
 
-        public static string _fileNameTwo = $"{Guid.NewGuid()}.png";
+        public static string _fileNameOne = DateTime.Now.ToString("yyyyMMddHHmmss");
 
         public static int _width = 0;
 
@@ -30,11 +30,13 @@
 
         public static byte[] _file = null!;
 
-        public static List<string> _imagesBase64 = new List<string>();
+        public static List<string> _srcImg = new List<string>();
+        
+        public static List<string> _imgBase64 = new List<string>();
 
         public static List<byte[]> _imagesBytes = new List<byte[]>();
 
-        public static void ResetImage()
+        public static void ResetValues()
         {
             _width = 0;
             _height = 0;
@@ -42,8 +44,9 @@
             _file = null!;
             _btnResize = true;
             _btnDownLoad = true;
-            _imagesBase64 = new List<string>();
+            _srcImg = new List<string>();
             _imagesBytes = new List<byte[]>();
+            _imgBase64  = new List<string>();
             _imageCount = 0;
         }
     }

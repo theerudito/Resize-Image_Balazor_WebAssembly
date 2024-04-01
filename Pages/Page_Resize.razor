@@ -29,7 +29,7 @@
     <Div class="containerControl">   
         <Button Class="BtnResize" @onclick="() => ResizeImage(ValueDefault._width, ValueDefault._height)" Disabled="@(ValueDefault._btnResize == false ? false : true)">Resize</Button>
         <Button Class="BtnSave" @onclick="SaveImage" Disabled="@(ValueDefault._btnDownLoad == true ? true : false)">Download</Button>
-        <Button Class="BtnReset">Reset</Button>
+        <Button Class="BtnReset" @onclick="ValueDefault.ResetValues">Reset</Button>
     </Div>
 
 </Div>

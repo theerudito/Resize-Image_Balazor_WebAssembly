@@ -1,11 +1,13 @@
 ﻿using Blazorise;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Newtonsoft.Json;
 using Resize_Image.Helpers;
+using Resize_Image.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System.IO.Compression;
-using Image = SixLabors.ImageSharp.Image;
+using System.Text;
 
 
 
@@ -15,16 +17,21 @@ namespace Resize_Image.Pages
     {
        
         [Inject]
-        public IJSRuntime JS { get; set; } = null!;    
+        public IJSRuntime JS { get; set; } = null!;
+
+        [Inject]
+        public HttpClient fetch { get; set; } = null!;
+
         protected override void OnInitialized()
         {
-            ValueDefault.ResetImage();
+            ValueDefault.ResetValues();
         }
+        
         public async Task HandleFileSelected(FileChangedEventArgs e)
         {
             const int maxImages = 5;
 
-            if (ValueDefault._imagesBase64.Count < maxImages)
+            if (ValueDefault._srcImg.Count < maxImages)
             { 
                 foreach (var file in e.Files)
                 {                    
@@ -38,8 +45,9 @@ namespace Resize_Image.Pages
 
                         if (ValueDefault._imageCount < maxImages)
                         {
-                            ValueDefault._imagesBase64.Add($"data:{file.UploadUrl};base64,{Convert.ToBase64String(bytes)}");
+                            ValueDefault._srcImg.Add($"data:{file.UploadUrl};base64,{Convert.ToBase64String(bytes)}");
                             ValueDefault._imagesBytes.Add(bytes);
+                            ValueDefault._imgBase64.Add(Convert.ToBase64String(bytes));
                             ValueDefault._imageCount++;
                         }
                     }
@@ -51,46 +59,98 @@ namespace Resize_Image.Pages
                 await JS.InvokeVoidAsync("alert", "You can only upload 5 images at a time.");
             }     
         }
-        public void DeleteImage(string img) => ValueDefault._imagesBase64.Remove(img);
+        
+        public void DeleteImage(string img) => ValueDefault._srcImg.Remove(img);
+        
         public async void ResizeImage(int width, int height)
-        {            
-            DirectoryManager.CreateDirectory(Path.Combine(ValueDefault._path, ValueDefault._folderImages));
+        {
 
-            DirectoryInfo directoryInPut = new DirectoryInfo(Path.Combine(ValueDefault._path, ValueDefault._folderImages));
-
-            foreach (var index in Enumerable.Range(0, ValueDefault._imagesBytes.Count))
+            if (ValueDefault._fromAPI == "api")
             {
-                var item = ValueDefault._imagesBytes[index];
-
-                var fileName = $"{ValueDefault._fileNameOne}_{index}.png";
-
-                var outputPath = Path.Combine(ValueDefault._path, ValueDefault._folderImages, fileName);
-
-                using (Image image = Image.Load(item))
+                var data = new DataUser
                 {
-                    image.Mutate(x => x.Resize(width == 0 ? 200 : width, height == 0 ? 200 : height));
-                    image.Save(outputPath);                    
-                }            
+                    ImgBase64 = ValueDefault._imgBase64,
+                    option = 2,
+                    width = width == 0 ? 500 : width,
+                    height = height == 0 ? 500 : height
+                };
+
+                var json = JsonConvert.SerializeObject(data);
+
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await fetch.PostAsync("Resize_Images", content);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var fileStream = response.Content.ReadAsStream();
+
+                    using (var ms = new MemoryStream())
+                    {
+                        fileStream.CopyTo(ms);
+                        ValueDefault._file = ms.ToArray();
+                        ValueDefault._btnResize = true;
+                        ValueDefault._btnDownLoad = false;
+                    }
+                    await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
+                }
+
+            }
+            else
+            {
+                DirectoryManager.CreateDirectory(Path.Combine(ValueDefault._path, ValueDefault._folderImages));
+
+                DirectoryInfo directoryInPut = new DirectoryInfo(Path.Combine(ValueDefault._path, ValueDefault._folderImages));
+
+                foreach (var index in Enumerable.Range(0, ValueDefault._imagesBytes.Count))
+                {
+                    var item = ValueDefault._imagesBytes[index];
+
+                    var fileName = $"{ValueDefault._fileNameOne}_{index}.png";
+
+                    var outputPath = Path.Combine(ValueDefault._path, ValueDefault._folderImages, fileName);
+
+                    using (var image = SixLabors.ImageSharp.Image.Load(item))
+                    {
+                        image.Mutate(x => x.Resize(width == 0 ? 200 : width, height == 0 ? 200 : height));
+                        image.Save(outputPath);
+                        ValueDefault._btnResize = true;
+                        ValueDefault._btnDownLoad = false;
+                    }
+                }
+
+                await JS.InvokeVoidAsync("alert", "The images were resized correctly.");
             }
 
-            Console.WriteLine("The images were resized correctly.");
-            ValueDefault._btnResize = true;
-            ValueDefault._btnDownLoad = false;
-
-            await JS.InvokeVoidAsync("alert", "The images were resized correctly.");         
+          
         }
-        public  void SaveImage()
+        
+        public async  void SaveImage()
         {
-            ValueDefault._btnDownLoad = true;
+            if (ValueDefault._fromAPI == "api")
+            {               
+                await JS.InvokeVoidAsync("downloadFileZip", ValueDefault._fileNameOne + ".zip", ValueDefault._file);
 
-            DirectoryManager.CreateDirectory(Path.Combine(ValueDefault._path, ValueDefault._folderZip));
+                ValueDefault._btnDownLoad = true;
 
-            DirectoryInfo files = new DirectoryInfo(Path.Combine(ValueDefault._path, ValueDefault._folderImages));
+                ValueDefault.ResetValues();
+            }
+            else
+            {
+                ValueDefault._btnDownLoad = true;
 
-            ConvetToZip(files.GetFiles(), ValueDefault._path, ValueDefault._folderZip);
+                DirectoryManager.CreateDirectory(Path.Combine(ValueDefault._path, ValueDefault._folderZip));
 
-            ValueDefault.ResetImage();
+                DirectoryInfo files = new DirectoryInfo(Path.Combine(ValueDefault._path, ValueDefault._folderImages));
+
+                ConvetToZip(files.GetFiles(), ValueDefault._path, ValueDefault._folderZip);
+
+                ValueDefault.ResetValues();
+            }
         }
+       
         public async  void ConvetToZip(FileInfo[] files, string path, string folderZip)
         {
             string zipPath = Path.Combine(path, folderZip, ValueDefault._fileNameOne + ".zip");

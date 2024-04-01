@@ -4,7 +4,9 @@ using Microsoft.JSInterop;
 using Resize_Image.Helpers;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp;
-using SixLabors.Fonts;
+using Newtonsoft.Json;
+using System.Text;
+using Resize_Image.Models;
 
 
 namespace Resize_Image.Pages
@@ -13,10 +15,15 @@ namespace Resize_Image.Pages
     {
         [Inject]
         public IJSRuntime JS { get; set; } = null!;
+
+        [Inject]
+        public HttpClient fetch { get; set; } = null!;
+
         protected override void OnInitialized()
         {
-            ValueDefault.ResetImage();
+            ValueDefault.ResetValues();
         }
+        
         private async Task HandleFileSelected(FileChangedEventArgs e)
         {
             var files = e.Files;
@@ -35,42 +42,74 @@ namespace Resize_Image.Pages
 
                         ValueDefault._base64 = $"data:{file.UploadUrl};base64,{Convert.ToBase64String(bytes)}";
 
-                        Console.WriteLine("The image was uploaded successfully.");
+                        ValueDefault._imgBase64.Add(Convert.ToBase64String(bytes));
                     }
-                }
-                ValueDefault._btnResize = false;             
+                }          
             }
-
-            DirectoryManager.CreateDirectory(Path.Combine(ValueDefault._path, ValueDefault._folderImages));
             ValueDefault._btnResize = false;
         }
+        
         public async void ResizeImage(int width, int height)
         {
-            using (var image = SixLabors.ImageSharp.Image.Load(ValueDefault._file))
+            if (ValueDefault._fromAPI == "api")
             {
-                image.Mutate(x => x.Resize(width == 0 ? 200 : width, height == 0 ? 200 : height));
+                var data = new DataUser
+                {
+                    ImgBase64 = ValueDefault._imgBase64,
+                    option = 1,
+                    width = width == 0 ? 500 : width,
+                    height = height == 0 ? 500 : height
+                };
 
-                string outputPath = Path.Combine(ValueDefault._path, ValueDefault._folderImages, ValueDefault._fileNameOne + ".png");
+                var json = JsonConvert.SerializeObject(data);
 
-                image.Save(outputPath);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                Console.WriteLine("The image were resized correctly.");
+                var response = await fetch.PostAsync("Resize_Images", content);
 
-                Console.WriteLine($"the image was saved in the path: {outputPath}");
 
-                ValueDefault._file = File.ReadAllBytes(outputPath);
+                if (response.IsSuccessStatusCode)
+                {
 
-                ValueDefault._btnDownLoad = false;
+                    var fileStream = response.Content.ReadAsStream();
+
+                    using (var ms = new MemoryStream())
+                    {
+                        fileStream.CopyTo(ms);
+                        ValueDefault._file = ms.ToArray();
+                        ValueDefault._btnDownLoad = false;
+                    }                  
+
+                    await JS.InvokeVoidAsync("alert", "The image were resized correctly.");                  
+                    ValueDefault._btnResize = true;
+                }
+
+            } else 
+            {
+                using (var image = SixLabors.ImageSharp.Image.Load(ValueDefault._file))
+                {
+                    image.Mutate(x => x.Resize(width == 0 ? 500 : width, height == 0 ? 500 : height));
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        image.SaveAsPng(ms);
+                        ValueDefault._file = ms.ToArray();
+                        ValueDefault._btnDownLoad = false;
+                    }
+                }
+
+                await JS.InvokeVoidAsync("alert", "The image were resized correctly.");  
                 ValueDefault._btnResize = true;
             }
-            await JS.InvokeVoidAsync("alert", "The image were resized correctly.");
         }
+        
         public async void SaveImage()
         {
             ValueDefault._btnDownLoad = true;
-            string outputPath = Path.Combine(ValueDefault._path, ValueDefault._folderImages, ValueDefault._fileNameOne + ".png"); 
-            await JS.InvokeVoidAsync("downloadFileFromByte", outputPath, ValueDefault._file);
-            ValueDefault.ResetImage();
+            await JS.InvokeVoidAsync("downloadFileFromByte", ValueDefault._fileNameOne + ".png", ValueDefault._file);
+            ValueDefault.ResetValues();
         }   
     }
+
 }
+

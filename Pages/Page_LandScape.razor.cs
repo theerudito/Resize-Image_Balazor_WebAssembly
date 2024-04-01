@@ -22,14 +22,14 @@ namespace Resize_Image.Pages
 
         protected override void OnInitialized()
         {
-            ValueDefault.ResetImage();
+            ValueDefault.ResetValues();
         }
 
         public async Task HandleFileSelected(FileChangedEventArgs e)
         {
             const int maxImages = 4;
 
-            if (ValueDefault._imagesBase64.Count < maxImages)
+            if (ValueDefault._srcImg.Count < maxImages)
             {
                 foreach (var file in e.Files)
                 {
@@ -43,7 +43,7 @@ namespace Resize_Image.Pages
 
                         ValueDefault._imagesBytes.Add(bytes);
 
-                        ValueDefault._imagesBase64.Add($"data:{file.UploadUrl};base64,{Convert.ToBase64String(bytes)}");
+                        ValueDefault._srcImg.Add($"data:{file.UploadUrl};base64,{Convert.ToBase64String(bytes)}");
 
                         ValueDefault._imageCount++;
                     }
@@ -142,9 +142,8 @@ namespace Resize_Image.Pages
             string outputPath = Path.Combine(ValueDefault._path, ValueDefault._folderImages, "avatar.png");
 
             await JS.InvokeVoidAsync("downloadFileFromByte", outputPath, ValueDefault._file);
-            ValueDefault.ResetImage();
+            ValueDefault.ResetValues();
         }
-
 
         private void AddBorder(Image<Rgba32> image, int borderSize, SixLabors.ImageSharp.Color borderColor)
         {
