@@ -13,15 +13,23 @@
     padding: 10px;
 }
 
+
 .containerImageLandScape > .imagePrincipal {
     display: flex;
     margin: auto;
-    width: 800px;
-    height: 400px;
-    border : 1px solid silver;
     border-radius: 10px;
+    align-content: center;
+    justify-content: center;
 }
 
+.containerImageLandScape > .imagePrincipal > img {
+    display: flex;
+    margin: auto;
+    border : 1px solid silver;
+    border-radius: 10px;
+    width: 400px;
+    height: 400px;
+}
 
 
 .containerScreenShotLandScape {

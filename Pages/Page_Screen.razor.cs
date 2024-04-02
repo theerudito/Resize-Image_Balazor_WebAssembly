@@ -78,7 +78,7 @@ namespace Resize_Image.Pages
 
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await fetch.PostAsync("Resize_Images", content);
+                var response = await fetch.PostAsync("ResizeImages", content);
 
 
                 if (response.IsSuccessStatusCode)

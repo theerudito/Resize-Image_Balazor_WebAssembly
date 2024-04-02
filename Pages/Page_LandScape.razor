@@ -7,24 +7,30 @@
         {
             if (ValueDefault._withBackground == false)
             {
-                <Image Class="imagePrincipal" Source="@(ValueDefault._srcImg.Count > 0 ? ValueDefault._srcImg[0] : ValueDefault._imageDefault)" />
+                <div class="imagePrincipal" style="width: 800px; height: 400px">
+                    <img src="@(ValueDefault._srcImg.Count > 0 ? ValueDefault._srcImg[0] : ValueDefault._imageDefault)" style="width: 800px; height: 400px" />
+                </div>
             }
             else
             {
-                <div Class="imagePrincipal" style="background-color: @ValueDefault._colorBackgroud"></div>
+                <div class="imagePrincipal" style="background: @ValueDefault._colorBackgroud; width: 800px; height: 410px">
+                    <img src="@(ValueDefault._srcImg.Count > 0 ? ValueDefault._srcImg[0] : ValueDefault._imageDefault)" style="width: 790px; height: 395xp" />
+                </div>
             }
-           
+               
+                
+
             <Div Class="containerScreenShotLandScape">
-                <h1 style="background: red">@ValueDefault._title</h1>
-                <h2 style="background-color: @ValueDefault._colorCompany)' ">@ValueDefault._company</h2>
+                <h1>@ValueDefault._title</h1>
+                <h2>@ValueDefault._company</h2>
                 <Image Class="imgOne" Source="@(ValueDefault._srcImg.Count > 1 ? ValueDefault._srcImg[1] : ValueDefault._imageDefault)" />
                 <Image Class="imgTwo" Source="@(ValueDefault._srcImg.Count > 2 ? ValueDefault._srcImg[2] : ValueDefault._imageDefault)" />
                 <Image Class="imgThree" Source="@(ValueDefault._srcImg.Count > 3 ? ValueDefault._srcImg[3] : ValueDefault._imageDefault)" />
             </Div>               
         }
         else
-        {        
-            <div Class="imagePrincipal" style="background-color: @ValueDefault._colorBackgroud = white"></div>
+        {
+            <div Class="imagePrincipal" style="width: 800px; height: 400px; background: @ValueDefault._colorBackgroud = white"></div>
             <Div Class="containerScreenShotLandScape">
                 <h1 style="background-color: @ValueDefault._colorTitle">Name of Application</h1>
                 <h2 style="background-color: @ValueDefault._colorCompany">Name of Company</h2>
