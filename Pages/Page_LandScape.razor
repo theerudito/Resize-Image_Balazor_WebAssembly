@@ -66,10 +66,10 @@
             <NumericEdit @bind-Value="@ValueDefault._height"/>     
         </Div>
 
-        <Div Class="containerButtonssLandScape">
+        <Div class="containerControl">
             @if (ValueDefault._taskComplete == false)
             {
-                <Button Class="BtnResize" @onclick="() => ResizeImage(ValueDefault._width, ValueDefault._height)" Disabled="@(ValueDefault._btnResize == false ? false : true)">Build</Button>
+                <Button Class="BtnResize" @onclick="() => ResizeImage(ValueDefault._width, ValueDefault._height)" Disabled="@(ValueDefault._btnResize == false ? false : true)">Resize</Button>
             }
             else
             {

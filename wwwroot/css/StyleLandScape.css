@@ -156,42 +156,6 @@
  gap: 10px;
 }
 
-.containerButtonssLandScape > .BtnResize {
-    background-color: #663399;
-    color: black;
-    width: 100px;
-}
-
-.containerButtonssLandScape > .BtnSave {
-    background-color: #ADFF2F;
-    color: black;
-    width: 100px;
-}
-
-.containerButtonssLandScape > .BtnReset {
-    background-color: #FF4500;
-    color: black;
-    width: 100px;
-}
-
-.containerButtonssLandScape > .BtnResize:hover { 
-    color: black;
-    background-color: #4C2F8E;
-}
-
-.containerButtonssLandScape > .BtnSave:hover {
-    color: black;
-    background-color: #8B8B00
-}
-
-.containerButtonssLandScape > .BtnReset:hover {
-    color: black;
-    background-color: #FF7F00;
-}
-
-
-
-
 
 
 

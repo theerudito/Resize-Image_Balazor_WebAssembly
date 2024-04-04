@@ -1,0 +1,63 @@
+﻿.containerWalpapper {
+    user-select: none;
+}
+
+.containerWalpapper > div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: auto;
+}
+
+.containerImageWalpapper {
+    width: 800px;
+    height: 400px;
+    border: solid 1px silver;
+    border-radius: 5px;
+    display: flex;
+    margin: 10px auto;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+ .containerImageWalpapper > img {
+    width: 200px;
+    height: 200px;
+    border: solid 1px silver;
+    border-radius: 50%;
+    display: flex;
+    margin: 10px auto;
+    object-fit: contain;
+}
+
+.containerInfoWalpapper {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px auto;
+}
+ .containerInfoWalpapper {
+
+}
+
+.containerInputWalpapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.containerInputWalpapper > label {
+    display: flex;
+    margin: auto;
+}
+
+.containerPickerWalpapper {
+    display: flex;
+    flex-direction: column;
+    margin: 10px auto;
+    gap: 10px;
+}
+
+
+

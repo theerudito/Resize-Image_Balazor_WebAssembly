@@ -27,11 +27,14 @@
     user-select: none;
 }
 
+.containerImageScreen > div  {
+}
+
 .containerImageScreen > div > i {
     display: flex; 
     color: red;
     position: relative;
-    left: 190px;
+    left: 185px;
     top: 10px;
     background: white;
     width: 20px;
@@ -70,38 +73,5 @@
     gap: 10px;
     margin: 20px auto;
     width: 400px;
-}
-
-.containerButtonsScreen > .BtnResize {
-    background-color: #663399;
-    color: black;
-    width: 100px;
-}
-
-.containerButtonsScreen > .BtnSave {
-    background-color: #ADFF2F;
-    color: black;
-    width: 100px;
-}
-
-.containerButtonsScreen > .BtnReset {
-    background-color: #FF4500;
-    color: black;
-    width: 100px;
-}
-
-.containerButtonsScreen > .BtnResize:hover { 
-    color: black;
-    background-color: #4C2F8E;
-}
-
-.containerButtonsScreen > .BtnSave:hover {
-    color: black;
-    background-color: #8B8B00;
-}
-
-.containerButtonsScreen > .BtnReset:hover {
-    color: black;
-    background-color: #FF7F00;
 }
 
