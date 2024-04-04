@@ -15,7 +15,7 @@ builder.Services
     })
     .AddBootstrapProviders();
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost/api/") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5050/api/") });
 
 
 await builder.Build().RunAsync();
