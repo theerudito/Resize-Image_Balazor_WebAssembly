@@ -1,13 +1,13 @@
 ﻿using Blazorise;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Newtonsoft.Json;
 using Resize_Image.Helpers;
 using Resize_Image.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System.IO.Compression;
 using System.Text;
+using System.Text.Json;
 
 
 
@@ -74,7 +74,7 @@ namespace Resize_Image.Pages
                     height = height == 0 ? 500 : height
                 };
 
-                var json = JsonConvert.SerializeObject(data);
+                var json = JsonSerializer.Serialize(data);
 
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 

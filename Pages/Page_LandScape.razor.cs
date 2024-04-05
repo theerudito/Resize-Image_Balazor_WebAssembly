@@ -5,9 +5,10 @@ using Resize_Image.Helpers;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using Newtonsoft.Json;
+
 using Resize_Image.Models;
 using System.Text;
+using System.Text.Json;
 
 
 namespace Resize_Image.Pages
@@ -80,7 +81,8 @@ namespace Resize_Image.Pages
                     withBackground = ValueDefault._withBackground
                 };
 
-                var json = JsonConvert.SerializeObject(data);
+                
+                var json = JsonSerializer.Serialize(data);
 
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
